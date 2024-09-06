@@ -121,7 +121,29 @@ Nous voyons que sont accepter les ping en ip4 (icmp accept) et ip6 (ipv6-icmp ac
 De même, tous les paquets provenants d'une connexion déjà établie sont acceptés (ct state established,related accept)
 
 
-# Q2.5.3
+# Q2.5.3<img width="1093" alt="Capture d’écran 2024-09-06 à 12 21 25" src="https://github.com/user-attachments/assets/de4a2666-1a17-4be9-8542-84364de112ef">
 
-Sont refusés, les paquets provenants de connexions non préétablis (ct state invalid drop)
 
+Sont refusés, les paquets provenants de connexions non préétablis (ct state invalid drop).
+
+# Q2.5.4
+
+Pour autoriser bareos à communiquer avec les clients, il faut modifier nftables avec les commandes suivantes puor ipv4 et ipv6:
+
+**nft add rule inet inet_filter_table in_chain ip saddr 10.0.2.15 tcp dport {9101, 9102, 9103} accept**
+**nft add rule inet inet_filter_table in_chain ip6 saddr fe80::a00:27ff:fef2:9e39 tcp dport {9101, 9102, 9103} accept**
+
+<img width="999" alt="Capture d’écran 2024-09-06 à 12 08 16" src="https://github.com/user-attachments/assets/79caf377-6b95-41a6-874d-96abc6003faf">
+
+# Q2.6.1
+
+En faisant un **ls /var/log**, je vois qu'il y a beaucoup de fichier **auth.log**.
+
+<img width="1093" alt="Capture d’écran 2024-09-06 à 12 21 25" src="https://github.com/user-attachments/assets/cb922604-cdfc-4e0a-9e4a-5d603d856282">
+
+
+Je tape donc la comande suivante: **zgrep "Failed password" /var/log/auth.log.*.gz | tail -n 10** qui me permets de piocher dans les differents fichiers log en même temps:
+
+<img width="1101" alt="Capture d’écran 2024-09-06 à 12 21 07" src="https://github.com/user-attachments/assets/d3461406-aa80-4bfe-a11b-dbd8c36a46a9">
+
+On peut voir que toutes les erreurs ont eu lieu le meme jour, soit le **3 janvier de 11h06 à 12h09** depuis la machine **10.0.0.199**
